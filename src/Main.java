@@ -13,7 +13,7 @@ public class Main {
 
 		List<Article> articles = new ArrayList<Article>();
 		
-		Date date = new Date();
+		Date date=new Date();
 
 		while (true) {
 
@@ -53,23 +53,52 @@ public class Main {
 				System.out.printf("%d번글이 생성되었습니다.\n", id);
 				lastArticleId++;
 			} else if (command.startsWith("article detail")) {
-				if (articles.size() == 0) {
-					String[] commandDiv = command.split(" ");
-					int id = Integer.parseInt(commandDiv[2]);
 
-					System.out.printf("%d번 게시물은 없어\n", id);
-				}else {
-					System.out.println("번호   /   날짜  /	제목 /	내용 ");
-					for (int i = articles.size() - 1; i >= 0; i--) {
-						Article article = articles.get(i);
-						System.out.printf(" %d     /   %d 	/	%s	/	%s	 \n", article.id,date, article.title,article.body);
+				String[] commandDiv = command.split(" "); // article detail 1
+
+				int id = Integer.parseInt(commandDiv[2]);
+
+				boolean found = false;
+
+				for (int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+					if (article.id == id) {
+						found = true;
+						System.out.println("번호 : " + article.id);
+						System.out.println("날짜 : " + date);
+						System.out.println("제목 : " + article.title);
+						System.out.println("내용 : " + article.body);
+						break;
 					}
 				}
-				 
 
+				if (found == false) {
+					System.out.printf("%d번 게시물은 없어\n", id);
+				}
 
-				
-			} else {
+			}else if (command.startsWith("article delete")) {
+
+				String[] commandDiv = command.split(" "); // article detail 1
+
+				int id = Integer.parseInt(commandDiv[2]);
+
+				boolean found = false;
+				int index=-1;
+				for (int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+					if (article.id == id) {
+						
+						articles.remove(id);
+						System.out.println("게시글 삭제했음");
+						break;
+					}
+				}
+
+				if (index== -1) {
+					System.out.printf("%d번 게시물은 없어\n", id);
+				}
+
+			}else {
 				System.out.println("존재하지 않는 명령어입니다");
 				continue;
 			}
