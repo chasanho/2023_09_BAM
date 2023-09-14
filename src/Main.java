@@ -37,23 +37,7 @@ public class Main {
 					}
 				}
 
-			}else if (command.equals("sign up")) {
-				
-				System.out.println("id:");
-				String logId = sc.nextLine();
-				System.out.println("pw:");
-				String logPw = sc.nextLine();
-				
-				Article article = new Article(logId,logPw);
-				articles.add(article);
-				
-				System.out.println("회원가입이 완료되셨습니다.축하합니다아아아");
-				
-				
-				
-
-			} 
-			else if (command.equals("article write")) {
+			} else if (command.equals("article write")) {
 				int id = lastArticleId + 1;
 				String regDate = Util.getNow();
 				System.out.printf("제목 : ");
@@ -66,6 +50,39 @@ public class Main {
 
 				System.out.printf("%d번글이 생성되었습니다.\n", id);
 				lastArticleId++;
+			} else if (command.startsWith("article modify ")) {
+				String[] commandDiv = command.split(" "); 
+
+				int id = Integer.parseInt(commandDiv[2]);
+
+				boolean found = false;
+
+				for (int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+					if (article.id == id) {
+						found = true;
+						System.out.println("제목 : " );
+						String retitle = sc.nextLine();
+						System.out.println("내용 : " );
+						String rebody = sc.nextLine();
+						
+						Article article1 = new Article(retitle,rebody);
+						articles.add(article1);
+						
+						System.out.println("게시글이 수정되었습니다.");
+						
+						
+						break;
+					}
+				}
+
+				if (found == false) {
+					System.out.printf("%d번 게시물은 없어\n", id);
+				}
+					
+
+
+				
 			} else if (command.startsWith("article detail")) {
 
 				String[] commandDiv = command.split(" "); // article detail 1
@@ -96,15 +113,11 @@ public class Main {
 
 				int id = Integer.parseInt(commandDiv[2]);
 
-				boolean found = false;
-				Article foundArticle = null;
 				int foundIndex = -1;
 
 				for (int i = 0; i < articles.size(); i++) {
 					Article article = articles.get(i);
 					if (article.id == id) {
-						found = true;
-						foundArticle = article;
 						foundIndex = i;
 						break;
 					}
@@ -114,7 +127,7 @@ public class Main {
 					System.out.printf("%d번 게시물은 없어\n", id);
 					continue;
 				}
-				
+
 				articles.remove(foundIndex);
 				System.out.println(id + "번 글을 삭제했어");
 
@@ -135,9 +148,9 @@ class Article {
 	String regDate;
 	String title;
 	String body;
-	String logId;
-	String logPw;
-	
+	String retitle;
+	String rebody;
+
 	Article(int id, String title, String body) {
 		this.id = id;
 		this.title = title;
@@ -150,9 +163,8 @@ class Article {
 		this.title = title;
 		this.body = body;
 	}
-	
-	Article(String logId,String logPw) {
-		this.logId = logId;
-		this.logPw = logPw;
+	Article(String retitle, String rebody) {
+		this.retitle = retitle;
+		this.rebody = rebody;
 	}
 }
