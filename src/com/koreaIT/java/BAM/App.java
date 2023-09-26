@@ -1,13 +1,25 @@
+package com.KoreaIT.java.BAM;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main {
-	static List<Article> articles = new ArrayList<Article>();
-	static List<Member> members = new ArrayList<Member>();
+import com.KoreaIT.java.BAM.controller.MemberController;
+import com.KoreaIT.java.BAM.dto.Article;
+import com.KoreaIT.java.BAM.dto.Member;
+import com.KoreaIT.java.BAM.util.Util;
 
-	public static void main(String[] args) {
+public class App {
 
+	List<Article> articles;
+	List<Member> members;
+
+	App() {
+		articles = new ArrayList<Article>();
+		members = new ArrayList<Member>();
+	}
+
+	public void start() {
 		System.out.println("== 프로그램 시작 ==");
 
 		makeTestData();
@@ -15,7 +27,8 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 
 		int lastArticleId = 5;
-		int lastMemberId = 0;
+
+		MemberController memberController = new MemberController(members,sc);
 
 		while (true) {
 
@@ -31,21 +44,8 @@ public class Main {
 				break;
 			}
 
-			else if (command.equals("member join")) {
-				int id = lastMemberId + 1;
-				String regDate = Util.getNow();
-				System.out.printf("로그인 아이디 : ");
-				String loginId = sc.nextLine();
-				System.out.printf("로그인 비밀번호 : ");
-				String loginPw = sc.nextLine();
-				System.out.printf("이름 : ");
-				String name = sc.nextLine();
-
-				Member member = new Member(id, regDate, regDate, loginId, loginPw, name);
-				members.add(member);
-
-				System.out.printf("%d번 회원이 가입되었습니다.\n", id);
-				lastMemberId++;
+			if (command.equals("member join")) {
+				memberController.doJoin();
 			}
 
 			else if (command.startsWith("article list")) {
@@ -166,9 +166,10 @@ public class Main {
 		System.out.println("== 프로그램 종료 ==");
 
 		sc.close();
+
 	}
 
-	private static int getArticleIndexById(int id) {
+	private int getArticleIndexById(int id) {
 
 		for (int i = 0; i < articles.size(); i++) {
 			Article article = articles.get(i);
@@ -180,7 +181,7 @@ public class Main {
 		return -1;
 	}
 
-	private static Article getArticleById(int id) {
+	private Article getArticleById(int id) {
 
 		int index = getArticleIndexById(id);
 
@@ -191,7 +192,7 @@ public class Main {
 		return null;
 	}
 
-	private static void makeTestData() {
+	private void makeTestData() {
 		System.out.println("테스트를 위한 데이터 5개 생성 완료");
 		articles.add(new Article(1, Util.getNow(), Util.getNow(), "제목1", "내용1", 11));
 		articles.add(new Article(2, Util.getNow(), Util.getNow(), "제목2", "내용2", 22));
@@ -199,44 +200,5 @@ public class Main {
 		articles.add(new Article(4, Util.getNow(), Util.getNow(), "제목11", "내용11", 44));
 		articles.add(new Article(5, Util.getNow(), Util.getNow(), "제목21", "내용21", 55));
 	}
-}
 
-class Article {
-	int id;
-	String regDate;
-	String updateDate;
-	String title;
-	String body;
-	int hit;
-
-	Article(int id, String regDate, String updateDate, String title, String body) {
-		this(id, regDate, updateDate, title, body, 0);
-	}
-
-	Article(int id, String regDate, String updateDate, String title, String body, int hit) {
-		this.id = id;
-		this.regDate = regDate;
-		this.updateDate = updateDate;
-		this.title = title;
-		this.body = body;
-		this.hit = hit;
-	}
-}
-
-class Member {
-	int id;
-	String regDate;
-	String updateDate;
-	String loginId;
-	String loginPw;
-	String name;
-
-	Member(int id, String regDate, String updateDate, String loginId, String loginPw, String name) {
-		this.id = id;
-		this.regDate = regDate;
-		this.updateDate = updateDate;
-		this.loginId = loginId;
-		this.loginPw = loginPw;
-		this.name = name;
-	}
 }
